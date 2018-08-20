@@ -1,0 +1,7 @@
+venv/*
+.idea/*
+*.pyc
+*.sqlite3
+*.tar.gz
+media/*
+node_modules/*
