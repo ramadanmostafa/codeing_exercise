@@ -17,7 +17,7 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('', include('frontend.urls')),
     path('api/v1/', include('api.urls')),
+    path('', include('frontend.urls')),
     path('', include('tinymce.urls')),
 ]

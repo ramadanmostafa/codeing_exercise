@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import key from "weak-key";
+import QuestionsTableRow from './QuestionsTableRow/QuestionsTableRow'
 
 
 const QuestionsTable = ({ data }) =>
@@ -8,20 +8,17 @@ const QuestionsTable = ({ data }) =>
     <p>Nothing to show</p>
   ) : (
     <div className="column">
-      <h2 className="subtitle">
-        Showing <strong>{data.length} items</strong>
-      </h2>
+      <h2 className="subtitle">Showing <strong>{data.length} items</strong></h2>
+      
       <table className="table is-striped">
         <thead>
           <tr>
-            {Object.entries(data[0]).map(el => <th key={key(el)}>{el[0]}</th>)}
+            <th>id</th><th>published</th><th>title</th><th>type</th><th>body</th>
           </tr>
         </thead>
         <tbody>
-          {data.map(el => (
-            <tr key={el.id}>
-              {Object.entries(el).map(el => <td key={key(el)}>{el[1]}</td>)}
-            </tr>
+          {data.map(row => (
+            <QuestionsTableRow key={row.id} row={row} />
           ))}
         </tbody>
       </table>
