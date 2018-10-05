@@ -19,6 +19,13 @@ class Question(models.Model):
     def to_dict(self):
         pass
 
+    @property
+    def answers_data(self):
+        data = []
+        for answer in self.answers.all():
+            data.append(answer.to_dict())
+        return data
+
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
@@ -26,6 +33,15 @@ class Answer(models.Model):
     is_correct = models.BooleanField(default=False)
     feedback = HTMLField()
     rank = models.CharField(max_length=1)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "body": self.body,
+            "is_correct": self.is_correct,
+            "feedback": self.feedback,
+            "rank": self.rank,
+        }
 
     def mark_as_correct(self):
         pass

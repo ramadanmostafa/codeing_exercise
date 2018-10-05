@@ -1,7 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from .models import Question, Answer
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, QuestionDetailsSerializer
 
 
 class QuestionsView(ListCreateAPIView):
@@ -12,3 +12,9 @@ class QuestionsView(ListCreateAPIView):
 
     def get_queryset(self):
         return Question.objects.all().order_by('id')
+
+
+class QuestionDetailsView(RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = QuestionDetailsSerializer
+    queryset = Question.objects.all()

@@ -1,53 +1,97 @@
 import React, { Component } from "react";
 import axios from 'axios';
 
-import TextArea from './../../UI/TextArea/TextArea'
+import Question from './../../components/Question/Question';
 
 
 class QuestionDetails extends Component {
   state = {
+    loaded: false,
+    placeholder: "Loading...",
     question: {
-      body: '',
-      answers: [
-        {index: '', isCorrect: false, body: '', feedback: ''},
-        {index: '', isCorrect: false, body: '', feedback: ''},
-        {index: '', isCorrect: false, body: '', feedback: ''},
-      ]
+      answers: []
     }
   };
   
   componentDidMount() {
-  
+    // if (this.props.match.params){
+    //   axios.get(window.page.urls.questions).then((response) => {
+    //     this.setState({ data: response.data, loaded: true })
+    //   }).catch(error => {
+    //     this.setState({ placeholder: "Something went wrong" })
+    //   });
+    // } else {
+    //   this.setState({ loaded: true })
+    // }
+    
   }
   
-  render() {
+  addAnswerHandler = () => {
+    const question = {...this.state.question};
+    const rank = question.answers.length + 1;
+    const addAnswer = {id: Math.random() * 10000000000, body: '', feedback: '', rank: rank, is_correct: false};
+    if (question.hasOwnProperty('answers')){
+      question.answers.push(addAnswer);
+    } else {
+      question.answers = [addAnswer];
+    }
     
+    this.setState({question});
+  };
+  
+  questionBodyChangeHandler = (value) => {
+    const question = {...this.state.question};
+    question.body = value.toString('html');
+    this.setState({question});
+  };
+  
+  answerBodyChangedHandler = (value, answerId) => {
+    const question = {...this.state.question};
+    const answer = question.answers.find((answer) => answer.id === answerId );
+    answer.body = value.toString('html');
+    this.setState({question});
+  };
+  
+  answerFeedbackChangedHandler = (value, answerId) => {
+    const question = {...this.state.question};
+    const answer = question.answers.find((answer) => answer.id === answerId );
+    answer.feedback = value.toString('html');
+    this.setState({question});
+  };
+  
+  answerMakeCorrectHandler = (answerId) => {
+    const question = {...this.state.question};
+    question.answers.map(answer => {
+      answer.is_correct = answer.id === answerId;
+    });
+    this.setState({question});
+  };
+  
+  answerDeleteHandler = (answerId) => {
+    let question = {...this.state.question};
+    question.answers = question.answers.filter(answer => answer.id !== answerId);
+    question = this.updateAnswersRank(question);
+    this.setState({question});
+  };
+  
+  updateAnswersRank = (question) => {
+    question.answers.map((answer, index) => {
+      answer.rank = index + 1;
+    });
+    return question
+  };
+  
+  render() {
     return (
-      <div>
-        <TextArea title="Question" />
-        <h2>Answers</h2>
-        <div style={{display: 'flex', 'flexFlow': 'row', width: '100%'}} className='row'>
-          <div className='col-md-2'><h3>(A)</h3></div>
-          <div className='col-md-4'>
-            <label  htmlFor="radio1"><strong>Mark as Correct</strong></label>&nbsp;&nbsp;
-            <input id="radio1" type="radio"/>
-          </div>
-          <div className='col-md-2 form-group'>
-            <button className="form-control btn btn-info">Move Up</button>
-          </div>
-          <div className='col-md-2 form-group'>
-            <button className="form-control btn btn-info">Move Down</button>
-          </div>
-          <div className='col-md-2 form-group'>
-            <button className="form-control btn btn-danger">Delete</button>
-          </div>
-        </div>
-        <TextArea title="Answer" />
-        <TextArea title="FeedBack" />
-        <div className='form-group' style={{width: '15%'}}>
-          <button className="form-control btn btn-success">Add Answer</button>
-        </div>
-      </div>
+        <Question
+          data={this.state.question}
+          addAnswer={this.addAnswerHandler}
+          questionBodyChange={this.questionBodyChangeHandler}
+          answerBodyChanged={this.answerBodyChangedHandler}
+          answerFeedbackChanged={this.answerFeedbackChangedHandler}
+          answerMakeCorrect={this.answerMakeCorrectHandler}
+          answerDelete={this.answerDeleteHandler}
+        />
     );
   }
 }

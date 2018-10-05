@@ -1,11 +1,46 @@
-import React from 'react';
+import React, {Component} from 'react';
+import RichTextEditor from 'react-rte';
+import PropTypes from 'prop-types';
 
 
-const textArea = (props) => (
-  <div>
-    <h2>{props.title}</h2>
-    <textarea name="feedback1" cols="110" rows="2">{props.value}</textarea><br/>
-  </div>
-);
 
-export default textArea;
+class TextArea extends Component {
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+  };
+
+  state = {
+    richValue: RichTextEditor.createValueFromString(this.props.value, 'html'),
+    htmlValue: this.props.value,
+  };
+
+  componentWillReceiveProps (newProps) {
+    if (newProps.value != this.state.htmlValue) {
+      this.setState({
+        richValue: RichTextEditor.createValueFromString(newProps.value, 'html'),
+        htmlValue: newProps.value,
+      });
+    }
+  }
+
+  onChange = (richValue) => {
+    this.setState({richValue, htmlValue: richValue.toString('html')}, () => {
+      this.props.onChange(this.state.htmlValue);
+    });
+  };
+
+  render () {
+    return (
+      <div>
+        <h2>{this.props.title}</h2>
+        <RichTextEditor
+          value={this.state.richValue}
+          onChange={this.onChange}
+        /> <br /> <br />
+      </div>
+    );
+  }
+}
+
+export default TextArea;
