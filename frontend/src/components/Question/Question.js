@@ -30,10 +30,10 @@ const question = (props) => {
         </div>
         <div className='col-md-6'/>
         <div className='form-group col-md-2'>
-          <button className="form-control btn btn-success">Save Draft</button>
+          <button className="form-control btn btn-success" onClick={props.saveDraft}>Save Draft</button>
         </div>
         <div className='form-group col-md-2'>
-          <button className="form-control btn btn-info">Publish</button>
+          <button className="form-control btn btn-info" onClick={props.publish}>Publish</button>
         </div>
       </div>
       

@@ -7,21 +7,12 @@ class Question(models.Model):
 
     # assume we only have a multiple choice question with only one correct answer
     type = models.CharField(max_length=32, default='Multiple Choice')
-    body = HTMLField()
-
-    def save_draft(self):
-        pass
-
-    def publish(self):
-        pass
-
-    def to_dict(self):
-        pass
+    body = HTMLField(default='')
 
     @property
     def answers(self):
         data = []
-        for answer in self.answers_data.all():
+        for answer in self.answers_data.all().order_by('rank'):
             data.append(answer.to_dict())
         return data
 
@@ -41,12 +32,3 @@ class Answer(models.Model):
             "feedback": self.feedback,
             "rank": self.rank,
         }
-
-    def mark_as_correct(self):
-        pass
-
-    def rank_up(self):
-        pass
-
-    def rank_down(self):
-        pass

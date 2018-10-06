@@ -40,8 +40,8 @@ class QuestionsListing extends Component {
     }
     return (
       <div>
-        <div className='col-md-6 form-group'>
-          <button className="form-control btn btn-success" onClick={this.addNewQuestionHandler}>Add New Question</button>
+        <div className='form-group' style={{width: '100%'}}>
+          <button style={{width: 'auto'}} className="form-control btn btn-success" onClick={this.addNewQuestionHandler}>Add New Question</button>
         </div>
         {table}
       </div>

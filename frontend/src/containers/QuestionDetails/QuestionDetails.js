@@ -23,8 +23,31 @@ class QuestionDetails extends Component {
     } else {
       this.setState({ loaded: true })
     }
-    
   }
+  
+  publishHandler = () => {
+    const question = {...this.state.question};
+    question.published = true;
+    this.setState({question}, () => this.saveDraftHandler());
+  };
+  
+  saveDraftHandler = () => {
+    if (this.props.match.params.hasOwnProperty('id')){
+      axios.put("/api/v1/questions/" + this.props.match.params.id, this.state.question).then((response) => {
+        this.props.history.replace('/');
+      }).catch(error => {
+        console.log(error);
+        this.setState({ placeholder: "Something went wrong" })
+      });
+    } else {
+      axios.post(window.page.urls.questions, this.state.question).then((response) => {
+        this.props.history.replace('/');
+      }).catch(error => {
+        console.log(error);
+        this.setState({ placeholder: "Something went wrong" })
+      });
+    }
+  };
   
   discardHandler = () => {
     this.setState({
@@ -134,6 +157,8 @@ class QuestionDetails extends Component {
           answerMoveDown={this.answerMoveDownHandler}
           answerMoveUp={this.answerMoveUpHandler}
           discard={this.discardHandler}
+          saveDraft={this.saveDraftHandler}
+          publish={this.publishHandler}
         />
     );
   }
