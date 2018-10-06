@@ -19,19 +19,30 @@ class QuestionsListing extends Component {
     });
   }
   
+  deleteQuestionHandler = (questionId) => {
+    axios.delete("/api/v1/questions/" + questionId).then((response) => {
+      let data = [...this.state.data];
+      data = data.filter(q => q.id !== questionId);
+      this.setState({data});
+    }).catch(error => {
+      this.setState({ placeholder: "Something went wrong" })
+    });
+  };
+  
   addNewQuestionHandler = () => {
-    console.log(this.props)
-    this.props.history.push(this.props.match.url + 'questions/add/')
+    this.props.history.push(this.props.match.url + 'questions/add/');
   };
   
   render() {
-    let table = <QuestionsTable data={this.state.data} />;
+    let table = <QuestionsTable data={this.state.data} deleteQuestion={this.deleteQuestionHandler}/>;
     if (!this.state.loaded){
       table = <p>{this.state.placeholder}</p>
     }
     return (
       <div>
-        <button onClick={this.addNewQuestionHandler}>Add New Question</button>
+        <div className='col-md-6 form-group'>
+          <button className="form-control btn btn-success" onClick={this.addNewQuestionHandler}>Add New Question</button>
+        </div>
         {table}
       </div>
     );

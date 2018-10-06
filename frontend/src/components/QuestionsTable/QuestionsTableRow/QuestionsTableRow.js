@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom'
 
 
 const QuestionsTableRow = (props) => {
@@ -8,9 +9,17 @@ const QuestionsTableRow = (props) => {
             <td>{props.row.id}</td>
             <td>{published}</td>
             <td>
-                <a href={'#'}>{props.row.title}</a></td>
+              <Link to={"/questions/details/" + props.row.id}>{props.row.body.slice(0, 50)}</Link>
+            </td>
             <td>{props.row.type}</td>
-            <td>{props.row.body}</td>
+            <td>
+              <Link to={"/questions/details/" + props.row.id}>Edit</Link>
+            </td>
+            <td>
+              <div className='form-group'>
+                <button className="form-control btn btn-danger" onClick={() => props.deleteQuestion(props.row.id)}>Delete</button>
+              </div>
+            </td>
         </tr>
     )
 };

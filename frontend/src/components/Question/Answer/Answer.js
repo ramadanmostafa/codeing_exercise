@@ -13,10 +13,10 @@ const answer = (props) => {
           <input id="radio1" type="radio" checked={props.data.is_correct} onChange={() => props.makeCorrect(props.data.id)}/>
         </div>
         <div className='col-md-2 form-group'>
-          <button className="form-control btn btn-info" disabled={!props.upEnabled}>Move Up</button>
+          <button className="form-control btn btn-info" disabled={!props.upEnabled} onClick={() => props.moveUp(props.data.id)}>Move Up</button>
         </div>
         <div className='col-md-2 form-group'>
-          <button className="form-control btn btn-info" disabled={!props.downEnabled}>Move Down</button>
+          <button className="form-control btn btn-info" disabled={!props.downEnabled} onClick={() => props.moveDown(props.data.id)}>Move Down</button>
         </div>
         <div className='col-md-2 form-group'>
           <button className="form-control btn btn-danger" onClick={() => props.delete(props.data.id)}>Delete</button>

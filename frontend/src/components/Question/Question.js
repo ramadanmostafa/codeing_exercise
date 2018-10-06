@@ -17,13 +17,18 @@ const question = (props) => {
         makeCorrect={props.answerMakeCorrect}
         upEnabled={index !== 0}
         downEnabled={index !== props.data.answers.length - 1}
+        moveUp={props.answerMoveUp}
+        moveDown={props.answerMoveDown}
       />
     )
   });
   return (
     <div style={{width: "1000px"}}>
       <div className='row'>
-        <div className='col-md-8'/>
+        <div className='form-group col-md-2'>
+          <button className="form-control btn btn-danger" onClick={props.discard}>Discard</button>
+        </div>
+        <div className='col-md-6'/>
         <div className='form-group col-md-2'>
           <button className="form-control btn btn-success">Save Draft</button>
         </div>

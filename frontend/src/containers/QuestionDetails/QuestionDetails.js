@@ -14,17 +14,28 @@ class QuestionDetails extends Component {
   };
   
   componentDidMount() {
-    // if (this.props.match.params){
-    //   axios.get(window.page.urls.questions).then((response) => {
-    //     this.setState({ data: response.data, loaded: true })
-    //   }).catch(error => {
-    //     this.setState({ placeholder: "Something went wrong" })
-    //   });
-    // } else {
-    //   this.setState({ loaded: true })
-    // }
+    if (this.props.match.params.hasOwnProperty('id')){
+      axios.get("/api/v1/questions/" + this.props.match.params.id).then((response) => {
+        this.setState({ question: response.data, loaded: true })
+      }).catch(error => {
+        this.setState({ placeholder: "Something went wrong" })
+      });
+    } else {
+      this.setState({ loaded: true })
+    }
     
   }
+  
+  discardHandler = () => {
+    this.setState({
+      loaded: false,
+      placeholder: "Loading...",
+      question: {
+        answers: []
+      }
+    });
+    this.props.history.replace('/');
+  };
   
   addAnswerHandler = () => {
     const question = {...this.state.question};
@@ -74,6 +85,35 @@ class QuestionDetails extends Component {
     this.setState({question});
   };
   
+  answerMoveUpHandler = (answerId) => {
+    let question = {...this.state.question};
+    for (let index=0; index<question.answers.length; index++) {
+      if (question.answers[index].id === answerId) {
+        const tmp = {...question.answers[index]};
+        question.answers[index] = {...question.answers[index - 1]};
+        question.answers[index - 1] = tmp;
+        break
+      }
+    }
+    question = this.updateAnswersRank(question);
+    this.setState({question});
+  };
+  
+  answerMoveDownHandler = (answerId) => {
+    let question = {...this.state.question};
+    
+    for (let index=0; index<question.answers.length; index++) {
+      if (question.answers[index].id === answerId) {
+        const tmp = {...question.answers[index]};
+        question.answers[index] = {...question.answers[index + 1]};
+        question.answers[index + 1] = tmp;
+        break
+      }
+    }
+    question = this.updateAnswersRank(question);
+    this.setState({question});
+  };
+  
   updateAnswersRank = (question) => {
     question.answers.map((answer, index) => {
       answer.rank = index + 1;
@@ -91,6 +131,9 @@ class QuestionDetails extends Component {
           answerFeedbackChanged={this.answerFeedbackChangedHandler}
           answerMakeCorrect={this.answerMakeCorrectHandler}
           answerDelete={this.answerDeleteHandler}
+          answerMoveDown={this.answerMoveDownHandler}
+          answerMoveUp={this.answerMoveUpHandler}
+          discard={this.discardHandler}
         />
     );
   }

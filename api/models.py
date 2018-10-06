@@ -4,7 +4,6 @@ from tinymce.models import HTMLField
 
 class Question(models.Model):
     published = models.BooleanField(default=False)  # false -> draft, true -> published
-    title = models.CharField(max_length=512)
 
     # assume we only have a multiple choice question with only one correct answer
     type = models.CharField(max_length=32, default='Multiple Choice')
@@ -20,19 +19,19 @@ class Question(models.Model):
         pass
 
     @property
-    def answers_data(self):
+    def answers(self):
         data = []
-        for answer in self.answers.all():
+        for answer in self.answers_data.all():
             data.append(answer.to_dict())
         return data
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
-    body = HTMLField()
+    question = models.ForeignKey(Question, related_name='answers_data', on_delete=models.CASCADE)
+    body = HTMLField(default='')
     is_correct = models.BooleanField(default=False)
-    feedback = HTMLField()
-    rank = models.CharField(max_length=1)
+    feedback = HTMLField(default='')
+    rank = models.IntegerField()
 
     def to_dict(self):
         return {

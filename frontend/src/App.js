@@ -9,6 +9,7 @@ import QuestionDetails from "./containers/QuestionDetails/QuestionDetails";
 const App = () => (
   <BrowserRouter>
     <Switch>
+      <Route path='/questions/details/:id' component={QuestionDetails} />
       <Route path='/questions/add' component={QuestionDetails} />
       <Route path='/questions' component={QuestionsListing} />
       <Route path='/' component={QuestionsListing} />
