@@ -1,5 +1,7 @@
 import React from "react";
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { deleteQuestion } from './../../../store/actions/index'
 
 
 const QuestionsTableRow = (props) => {
@@ -24,4 +26,10 @@ const QuestionsTableRow = (props) => {
     )
 };
 
-export default QuestionsTableRow;
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteQuestion: (id) => dispatch(deleteQuestion(id))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(QuestionsTableRow);

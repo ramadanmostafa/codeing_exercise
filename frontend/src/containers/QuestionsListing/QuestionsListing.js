@@ -1,42 +1,24 @@
 import React, { Component } from "react";
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { getQuestionsListing } from './../../store/actions/index'
 
 import QuestionsTable from './../../components/QuestionsTable/QuestionsTable'
 
 
 class QuestionsListing extends Component {
-  state = {
-      data: [],
-      loaded: false,
-      placeholder: "Loading..."
-    };
   
   componentDidMount() {
-    axios.get(window.page.urls.questions).then((response) => {
-      this.setState({ data: response.data, loaded: true })
-    }).catch(error => {
-      this.setState({ placeholder: "Something went wrong" })
-    });
+    this.props.getQuestionsListing();
   }
-  
-  deleteQuestionHandler = (questionId) => {
-    axios.delete("/api/v1/questions/" + questionId).then((response) => {
-      let data = [...this.state.data];
-      data = data.filter(q => q.id !== questionId);
-      this.setState({data});
-    }).catch(error => {
-      this.setState({ placeholder: "Something went wrong" })
-    });
-  };
   
   addNewQuestionHandler = () => {
     this.props.history.push(this.props.match.url + 'questions/add/');
   };
   
   render() {
-    let table = <QuestionsTable data={this.state.data} deleteQuestion={this.deleteQuestionHandler}/>;
-    if (!this.state.loaded){
-      table = <p>{this.state.placeholder}</p>
+    let table = <QuestionsTable data={this.props.data}/>;
+    if (!this.props.loaded){
+      table = <p>{this.props.placeholder}</p>
     }
     return (
       <div>
@@ -48,4 +30,19 @@ class QuestionsListing extends Component {
     );
   }
 }
-export default QuestionsListing;
+
+const mapStateToProps = state => {
+  return {
+    data: state.listing.data,
+    loaded: state.listing.loaded,
+    placeholder: state.listing.placeholder
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getQuestionsListing: () => dispatch(getQuestionsListing()),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionsListing);
