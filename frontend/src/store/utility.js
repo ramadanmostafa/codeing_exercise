@@ -4,3 +4,10 @@ export const updateObject = (oldObject, updatedValues) => {
         ...updatedValues
     }
 };
+
+export const updateAnswersRank = (question) => {
+    question.answers.map((answer, index) => {
+      answer.rank = index + 1;
+    });
+    return question
+};

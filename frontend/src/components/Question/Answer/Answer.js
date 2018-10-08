@@ -1,16 +1,23 @@
 import React from 'react';
 
 import TextArea from './../../../UI/TextArea/TextArea';
+import { connect } from "react-redux";
+import {
+  answerBodyChanged, answerDelete, answerFeedbackChanged, answerMakeCorrect, answerMoveUp, answerMoveDown
+} from './../../../store/actions/index';
 
 
 const answer = (props) => {
   return (
     <div>
       <div style={{display: 'flex', 'flexFlow': 'row', width: '100%'}} className='row'>
-        <div className='col-md-2'><h3>({props.data.rank})</h3></div>
+        <div className='col-md-2'><h3>({props.answer.rank})</h3></div>
         <div className='col-md-4'>
-          <label htmlFor="radio1"><strong>Mark as Correct</strong></label>&nbsp;&nbsp;
-          <input id="radio1" type="radio" checked={props.data.is_correct} onChange={() => props.makeCorrect(props.data.id)}/>
+          <label htmlFor={'checkbox' + props.data.id}><strong>{props.answer.is_correct ? "Correct" : "Mark as Correct"}</strong></label>&nbsp;&nbsp;
+          <input
+            id={'checkbox' + props.data.id} type="checkbox"
+            checked={props.answer.is_correct} onChange={() => props.makeCorrect(props.data.id)}
+          />
         </div>
         <div className='col-md-2 form-group'>
           <button className="form-control btn btn-info" disabled={!props.upEnabled} onClick={() => props.moveUp(props.data.id)}>Move Up</button>
@@ -25,15 +32,30 @@ const answer = (props) => {
       <TextArea
         title="Answer"
         onChange={(value) => props.bodyChanged(value, props.data.id)}
-        value={props.data.body ? props.data.body : ""}
+        value={props.answer.body ? props.answer.body : ""}
       />
       <TextArea
         title="FeedBack"
         onChange={(value) => props.feedbackChanged(value, props.data.id)}
-        value={props.data.feedback ? props.data.feedback : ""}
+        value={props.answer.feedback ? props.answer.feedback : ""}
       />
     </div>
   )
 };
 
-export default answer;
+const mapDispatchToProps = dispatch => {
+  return {
+    bodyChanged: (val, answerId) => dispatch(answerBodyChanged(val, answerId)),
+    feedbackChanged: (val, answerId) => dispatch(answerFeedbackChanged(val, answerId)),
+    delete: (answerId) => dispatch(answerDelete(answerId)),
+    makeCorrect: (answerId) => dispatch(answerMakeCorrect(answerId)),
+    moveUp: (answerId) => dispatch(answerMoveUp(answerId)),
+    moveDown: (answerId) => dispatch(answerMoveDown(answerId)),
+  }
+};
+
+const mapStateToProps = (state, ownProps) => ({
+  answer: state.details.question.answers.find(a => a.id === ownProps.data.id)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(answer);

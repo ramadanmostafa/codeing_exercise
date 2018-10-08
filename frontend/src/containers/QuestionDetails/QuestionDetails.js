@@ -1,28 +1,21 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import { connect } from 'react-redux';
 
 import Question from './../../components/Question/Question';
+import { getQuestionDetails, resetState } from './../../store/actions/index'
 
 
 class QuestionDetails extends Component {
-  state = {
-    loaded: false,
-    placeholder: "Loading...",
-    question: {
-      answers: []
-    }
-  };
   
   componentDidMount() {
     if (this.props.match.params.hasOwnProperty('id')){
-      axios.get("/api/v1/questions/" + this.props.match.params.id).then((response) => {
-        this.setState({ question: response.data, loaded: true })
-      }).catch(error => {
-        this.setState({ placeholder: "Something went wrong" })
-      });
-    } else {
-      this.setState({ loaded: true })
+      this.props.getQuestionDetails(this.props.match.params.id);
     }
+  }
+  
+  componentWillUnmount() {
+    this.props.resetState();
   }
   
   publishHandler = () => {
@@ -50,13 +43,6 @@ class QuestionDetails extends Component {
   };
   
   discardHandler = () => {
-    this.setState({
-      loaded: false,
-      placeholder: "Loading...",
-      question: {
-        answers: []
-      }
-    });
     this.props.history.replace('/');
   };
   
@@ -79,75 +65,10 @@ class QuestionDetails extends Component {
     this.setState({question});
   };
   
-  answerBodyChangedHandler = (value, answerId) => {
-    const question = {...this.state.question};
-    const answer = question.answers.find((answer) => answer.id === answerId );
-    answer.body = value.toString('html');
-    this.setState({question});
-  };
-  
-  answerFeedbackChangedHandler = (value, answerId) => {
-    const question = {...this.state.question};
-    const answer = question.answers.find((answer) => answer.id === answerId );
-    answer.feedback = value.toString('html');
-    this.setState({question});
-  };
-  
-  answerMakeCorrectHandler = (answerId) => {
-    const question = {...this.state.question};
-    question.answers.map(answer => {
-      answer.is_correct = answer.id === answerId;
-    });
-    this.setState({question});
-  };
-  
-  answerDeleteHandler = (answerId) => {
-    let question = {...this.state.question};
-    question.answers = question.answers.filter(answer => answer.id !== answerId);
-    question = this.updateAnswersRank(question);
-    this.setState({question});
-  };
-  
-  answerMoveUpHandler = (answerId) => {
-    let question = {...this.state.question};
-    for (let index=0; index<question.answers.length; index++) {
-      if (question.answers[index].id === answerId) {
-        const tmp = {...question.answers[index]};
-        question.answers[index] = {...question.answers[index - 1]};
-        question.answers[index - 1] = tmp;
-        break
-      }
-    }
-    question = this.updateAnswersRank(question);
-    this.setState({question});
-  };
-  
-  answerMoveDownHandler = (answerId) => {
-    let question = {...this.state.question};
-    
-    for (let index=0; index<question.answers.length; index++) {
-      if (question.answers[index].id === answerId) {
-        const tmp = {...question.answers[index]};
-        question.answers[index] = {...question.answers[index + 1]};
-        question.answers[index + 1] = tmp;
-        break
-      }
-    }
-    question = this.updateAnswersRank(question);
-    this.setState({question});
-  };
-  
-  updateAnswersRank = (question) => {
-    question.answers.map((answer, index) => {
-      answer.rank = index + 1;
-    });
-    return question
-  };
-  
   render() {
     return (
         <Question
-          data={this.state.question}
+          data={this.props.question}
           addAnswer={this.addAnswerHandler}
           questionBodyChange={this.questionBodyChangeHandler}
           answerBodyChanged={this.answerBodyChangedHandler}
@@ -163,4 +84,18 @@ class QuestionDetails extends Component {
     );
   }
 }
-export default QuestionDetails;
+
+const mapStateToProps = state => {
+  return {
+    question: state.details.question
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getQuestionDetails: (id) => dispatch(getQuestionDetails(id)),
+    resetState: () => dispatch(resetState())
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionDetails);

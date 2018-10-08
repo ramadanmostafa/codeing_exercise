@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import TextArea from './../../UI/TextArea/TextArea';
 import Answer from './Answer/Answer';
@@ -11,14 +12,8 @@ const question = (props) => {
       <Answer
         data={answer}
         key={answer.id}
-        bodyChanged={props.answerBodyChanged}
-        delete={props.answerDelete}
-        feedbackChanged={props.answerFeedbackChanged}
-        makeCorrect={props.answerMakeCorrect}
         upEnabled={index !== 0}
         downEnabled={index !== props.data.answers.length - 1}
-        moveUp={props.answerMoveUp}
-        moveDown={props.answerMoveDown}
       />
     )
   });
@@ -55,4 +50,10 @@ const question = (props) => {
   )
 };
 
-export default question;
+const mapDispatchToProps = dispatch => {
+  return {
+    // getQuestionsListing: () => dispatch(getQuestionsListing()),
+  }
+};
+
+export default connect(null, mapDispatchToProps)(question);
