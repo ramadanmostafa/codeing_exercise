@@ -6,22 +6,18 @@ simple django-react app to allow user to add, update and delete questions with a
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-## Postman Documentation
-
-I believe that the best way to document API is to attach postman collections to describe the work done.
-I created one for you "cognitev-technical-task.postman_collection.json"
-
 ## Simple Documentation
 
-There are 3 APIs endpoints
+There are 2 APIs endpoints
 
-/api/register/ --> POST,
-I added a required field to this endpoint (password) to be used on login.
+/api/v1/questions/ --> GET, POST,
+GET will return all questions
+POST will create a new question
 
-/api/login/ --> POST, takes phone number and password, returns token
-
-/api/status/ --> POST, takes "Authorization": "token {token}" in the
-header for authentication and "status" in the body.
+/api/v1/questions/<int:pk>/ --> GET, PUT, PATCH, DELETE
+GET will return a single question details
+PUT, PATCH will update a question
+DELETE will delete a question
 
 ### Installation
 
@@ -35,7 +31,7 @@ I used django2.0, RESTFramework, react.js for frontend, sqlite3 for the database
 
 ## Running the tests
 
-There are about 25 test case that provide 100% code coverage. You can run them using the command belew.
+There are about 26 test case that provide 100% code coverage. You can run them using the command belew.
 
 ```
 python manage.py test
@@ -43,8 +39,9 @@ python manage.py test
 
 ### Break down into end to end tests
 
-Actually there are a test for every single line i wrote. i tried to cover as much scenarios as i can.
-there are some tests for views, serializers, permissions and models. i didn't use mock on testing the views because i wanted it to act like an integration test because i believe unit tests are great but not enough and this project is too small to apply this concept. 
+Actually there are a test for every single line i wrote in python. i tried to cover as much scenarios as i can.
+there are some tests for views, serializers and models. i didn't use mock on testing the views because i wanted it to act like an integration test because i believe unit tests are great but not enough and this project is too small to apply this concept.
+about react testing, i don't think this was required.
 
 ## Author
 

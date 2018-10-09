@@ -39,6 +39,10 @@ export const answerBodyChanged = (val, answerId) => {
   return { type: actionTypes.ANSWER_BODY_CHANGED, id: answerId, val: val };
 };
 
+export const questionBodyChanged = (val) => {
+  return { type: actionTypes.QUESTION_BODY_CHANGED, val: val };
+};
+
 export const answerFeedbackChanged = (val, answerId) => {
   return { type: actionTypes.ANSWER_FEEDBACK_CHANGED, id: answerId, val: val };
 };
@@ -57,4 +61,13 @@ export const answerMoveUp = (answerId) => {
 
 export const answerMoveDown = (answerId) => {
   return { type: actionTypes.ANSWER_MOVE_DOWN, id: answerId };
+};
+
+export const addNewAnswer = () => {
+  return { type: actionTypes.ADD_NEW_ANSWER };
+};
+
+export const publishQuestion = ()=> dispatch=>{
+  dispatch({ type: actionTypes.PUBLISH_QUESTION });
+  return Promise.resolve()
 };
