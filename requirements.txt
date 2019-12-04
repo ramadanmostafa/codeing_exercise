@@ -1,6 +1,6 @@
 certifi==2018.8.13
 chardet==3.0.4
-django==2.1.2
+django==2.1.11
 django-tinymce==2.7.0
 djangorestframework==3.8.2
 idna==2.7
